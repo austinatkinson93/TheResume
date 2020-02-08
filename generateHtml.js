@@ -173,9 +173,8 @@ function generateHTML(data) {
            }
         </style>
         </head>
-        <body>
-  <div class="wrapper">
-  <div class="container">
+<body>
+  <div class="container wrapper">
     <div class="row">
       <div class="card photo-header">
         <img src=${data.profileIMG}>
@@ -183,9 +182,9 @@ function generateHTML(data) {
         <h1>My Name Is ${data.name} </h1>
         <h3>currently working with ${data.company}</h3>
         <h4 class="links-nav">
-          <a href="https://www.google.com/maps/place/${data.location}" class="nav-link">Location</a>
-          <a href="${data.profileURL}" class="nav-link"><i class="fab fa-github-square"></i>Github</a>
-          <a href="${data.blog}" class="nav-link">Blog</a>
+        <i class="fas fa-location-arrow fa-lg"></i><a href="https://www.google.com/maps/place/${data.location}" class="nav-link">Location</a>
+        <i class="fab fa-github-square fa-lg"></i><a href="${data.profileURL}" class="nav-link">Github</a>
+        <i class="fas fa-blog fa-lg fa-lg"></i><a href="${data.blog}" class="nav-link">Blog</a>
         </h4>
       </div>
     </div>
@@ -194,29 +193,29 @@ function generateHTML(data) {
     </div>
     <div class="row">
       <div class="col">
-        <div class="card">
-          <h1>Public Repositories</h1>
-          <h3>${data.repoNum}</h3>
+        <div class="card wrapper">
+          <h3>Repositories</h3>
+          <h4>${data.repoNum}</h4>
         </div>
       </div>
       <div class="col">
-        <div class="card">
-          <h1>Followers</h1>
-          <h3>${data.followersNum}</h3>
+        <div class="card wrapper">
+          <h3>Followers</h3>
+          <h4>${data.followersNum}</h4>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col">
-        <div class="card">
-          <h1>Github Stars</h1>
-          <h3>${data.stargazersCount}</h3>
+        <div class="card wrapper">
+          <h3>Github Stars</h3>
+          <h4>${data.stargazersCount}</h4>
         </div>
       </div>
       <div class="col">
-        <div class="card">
-          <h1>Following</h1>
-          <h3>${data.followingNum}</h3>
+        <div class="card wrapper">
+          <h3>Following</h3>
+          <h4>${data.followingNum}</h4>
         </div>
       </div>
     </div>

@@ -5,6 +5,7 @@ const inquirer = require("inquirer")
 const HTML5ToPDF = require("html5-to-pdf")
 const generateHTML = require("./generateHtml.js");
 const path = require("path")
+require('dotenv').config()
 
 const writeFileAsync = util.promisify(fs.writeFile);
 
@@ -31,11 +32,11 @@ async function promptUser() {
         throw err;
     }
 
-    console.log(userInfo)
+
 }
 
 function userGithub(githubUsername) {
-    queryURL = `https://api.github.com/users/${githubUsername}`
+    queryURL = `https://austinatkinson93:${process.env.TOKEN}@api.github.com/users/${githubUsername}`
     return axios
         .get(queryURL)
         .then((response) => {
@@ -50,55 +51,53 @@ function userGithub(githubUsername) {
             userInfo.blog = response.data.blog;
             userInfo.company = response.data.company;
 
-            console.log(userInfo);
         })
 }
 
 
 async function RenderPDF() {
-    try {
+    await promptUser();
+    await userGithub(userInfo.githubUsername);
+    await userStars(userInfo.githubUsername);
+    var HTML = await generateHTML(userInfo);
+    await writeFileAsync("resume.html", HTML);
+    await run();
 
-        await promptUser();
-        await userGithub(userInfo.githubUsername);
-        await userStars(userInfo.githubUsername);
 
-        var HTML = generateHTML(userInfo);
-
-        await writeFileAsync("resume.html", HTML);
-        await run();
-    } catch (err) {
-        throw err;
-    }
 }
 
-RenderPDF()
 
 
 function userStars(githubUsername) {
-    queryURL = `https://api.github.com/users/${githubUsername}/repos`
-    axios
+    queryURL = `https://austinatkinson93:${process.env.TOKEN}@api.github.com/users/${githubUsername}/repos`
+    return axios
         .get(queryURL)
         .then((response) => {
             const repoArray = response.data
-            repoArray.forEach(function (response, i) {
-                userInfo.stargazersCount = userInfo.stargazersCount += response.stargazers_count
+            userInfo.stargazersCount = 0
+            repoArray.forEach(function (response) {
+                userInfo.stargazersCount += response.stargazers_count
             })
-            console.log(userInfo.stargazersCount)
-        })
+        }).catch(err => console.log(err))
 }
+
 
 const run = async () => {
     const html5ToPDF = new HTML5ToPDF({
-        inputPath: path.join(__dirname, ".", "resume.html"),
-        outputPath: path.join(__dirname, ".", "resume.pdf"),
+      inputPath: path.join(__dirname, 'resume.html'),
+      outputPath: path.join(__dirname, "resume.pdf"),
+      templatePath: path.join(__dirname, 'templates', 'basic')
     })
 
+   
     await html5ToPDF.start()
     await html5ToPDF.build()
     await html5ToPDF.close()
     console.log("DONE")
     process.exit(0)
-}
+  }
+   
 
 
+RenderPDF()
 
